@@ -1,0 +1,15 @@
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\bin\Debug\net9.0\CsharpTest.exe
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\bin\Debug\net9.0\CsharpTest.deps.json
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\bin\Debug\net9.0\CsharpTest.runtimeconfig.json
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\bin\Debug\net9.0\CsharpTest.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\bin\Debug\net9.0\CsharpTest.pdb
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.AssemblyInfoInputs.cache
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.AssemblyInfo.cs
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.csproj.CoreCompileInputs.cache
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.sourcelink.json
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\refint\CsharpTest.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.pdb
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\CsharpTest.genruntimeconfig.cache
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\CsharpTest\CsharpTest\obj\Debug\net9.0\ref\CsharpTest.dll
