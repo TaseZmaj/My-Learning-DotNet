@@ -1,0 +1,5 @@
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\EventsManagement\EventsManagement.Domain\obj\Debug\net10.0\EventsManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\EventsManagement\EventsManagement.Domain\obj\Debug\net10.0\EventsManagement.Domain.AssemblyInfoInputs.cache
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\EventsManagement\EventsManagement.Domain\obj\Debug\net10.0\EventsManagement.Domain.AssemblyInfo.cs
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\EventsManagement\EventsManagement.Domain\obj\Debug\net10.0\EventsManagement.Domain.csproj.CoreCompileInputs.cache
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud1_IntroC#\EventsManagement\EventsManagement.Domain\obj\Debug\net10.0\EventsManagement.Domain.sourcelink.json

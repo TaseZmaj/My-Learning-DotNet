@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "HZ2E4iSU7kM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\stefa\\OneDrive\\Rider-Projects\\SEMESTER6\\Integrated-Systems\\Aud1_IntroC#\\EventsManagement\\EventsManagement.Web\\EventsManagement.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\10.0.3\\microsoft.aspnetcore.identity.ui.10.0.3.nupkg.sha512",
+    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.3\\microsoft.entityframeworkcore.10.0.3.nupkg.sha512",
+    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.3\\microsoft.entityframeworkcore.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.3\\microsoft.entityframeworkcore.analyzers.10.0.3.nupkg.sha512",
+    "C:\\Users\\stefa\\.nuget\\packages\\microsoft.extensions.fileproviders.embedded\\10.0.3\\microsoft.extensions.fileproviders.embedded.10.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
