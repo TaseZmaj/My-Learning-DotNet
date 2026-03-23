@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EventsManagement.Repository;
 using EvolveDb;
-using Microsoft.Data.SqlClient;
+// using Microsoft.Data.SqlClient;
 
 // using EventsManagement.Web.Data;
 
@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -20,25 +20,25 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 //============================ KOD ZA evolve ======================================
-try
-{
-    using var cnx = new SqlConnection(connectionString);
-
-    var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
-    {
-        Locations = new[] { "Database/Migrations" },
-        IsEraseDisabled = true,
-        OutOfOrder = true
-    };
-
-    evolve.Migrate();
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Migration failed");
-    Console.WriteLine(ex);
-    throw;
-}
+// try
+// {
+//     using var cnx = new SqlConnection(connectionString);
+//
+//     var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
+//     {
+//         Locations = new[] { "Database/Migrations" },
+//         IsEraseDisabled = true,
+//         OutOfOrder = true
+//     };
+//
+//     evolve.Migrate();
+// }
+// catch (Exception ex)
+// {
+//     Console.WriteLine("Migration failed");
+//     Console.WriteLine(ex);
+//     throw;
+// }
 //=================================================================================
 
 var app = builder.Build();
