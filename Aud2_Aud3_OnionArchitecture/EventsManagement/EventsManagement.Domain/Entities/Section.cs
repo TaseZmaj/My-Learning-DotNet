@@ -8,7 +8,7 @@ public class Section : BaseEntity
     
     //MANY-TO-ONE
     public Guid VenueId { get; set; } //Foreign key
-    public virtual Venue venue { get; set; } = null!; //t.n. NAVIGATION PROPERTY koj pokazuva kon parent-ot
+    public virtual Venue Venue { get; set; } = null!; //t.n. NAVIGATION PROPERTY koj pokazuva kon parent-ot
         //"virtual" vo kontekstot na Entity Framework se koristi za LAZY LOADING,
         //a obicno znaci deka neshto moze da e overridden
 

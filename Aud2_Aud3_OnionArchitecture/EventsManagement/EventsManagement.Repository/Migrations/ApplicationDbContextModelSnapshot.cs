@@ -590,13 +590,13 @@ namespace EventsManagement.Repository.Migrations
 
             modelBuilder.Entity("EventsManagement.Domain.Entities.Section", b =>
                 {
-                    b.HasOne("EventsManagement.Domain.Entities.Venue", "venue")
+                    b.HasOne("EventsManagement.Domain.Entities.Venue", "Venue")
                         .WithMany("Sections")
                         .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("venue");
+                    b.Navigation("Venue");
                 });
 
             modelBuilder.Entity("EventsManagement.Domain.Entities.Ticket", b =>

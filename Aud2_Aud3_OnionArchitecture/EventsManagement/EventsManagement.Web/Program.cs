@@ -1,7 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EventsManagement.Repository;
+using EventsManagement.Repository.Implementations;
+using EventsManagement.Repository.Interfaces;
+using EventsManagement.Web.Mapper;
 using EvolveDb;
+using Service.Implementations;
+using Service.Interfaces;
+
 // using Microsoft.Data.SqlClient;
 
 // using EventsManagement.Web.Data;
@@ -13,11 +19,20 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IEventService, EventService>();
+// builder.Services.AddScoped<IVenueService, VenueService>();
+// builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services.AddScoped<EventMapper>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+
 
 //============================ KOD ZA evolve ======================================
 // try
