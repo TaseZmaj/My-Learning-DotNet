@@ -61,8 +61,8 @@ public class EventService : IEventService
             EndDate = eventDto.EndDate,
             EventStatus = eventDto.Status,
             ImageUrl = eventDto.ImageUrl,
-            VenueId = eventDto.VenueId,
-            UserId = eventDto.UserId
+            // VenueId = eventDto.VenueId,
+            // UserId = eventDto.UserId
         };
         return await _repository.InsertAsync(eventToAdd);
     }

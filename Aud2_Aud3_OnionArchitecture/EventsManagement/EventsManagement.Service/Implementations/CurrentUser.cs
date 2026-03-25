@@ -13,8 +13,10 @@ public class CurrentUser : ICurrentUser
         _accessor = accessor;
     }
     
+    //Everything is nullable (string?) — because there might not be an authenticated user (anonymous requests)
+    //t.e. koga nekoj pravi request ali ne e logiran
     public string? GetUserId()
     {
-        return _accessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return _accessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
 }

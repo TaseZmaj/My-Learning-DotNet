@@ -585,3 +585,13 @@ C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_On
 C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\obj\Debug\net10.0\EventsManagement.Web.pdb
 C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\obj\Debug\net10.0\EventsManagement.Web.genruntimeconfig.cache
 C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\obj\Debug\net10.0\ref\EventsManagement.Web.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Castle.Core.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Proxies.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\stefa\OneDrive\Rider-Projects\SEMESTER6\Integrated-Systems\Aud2_Aud3_OnionArchitecture\EventsManagement\EventsManagement.Web\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll

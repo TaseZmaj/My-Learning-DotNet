@@ -36,8 +36,8 @@ public static class EventsExtensions
             ImageUrl = request.ImageUrl,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            VenueId = request.VenueId,
-            UserId = request.UserId,
+            // VenueId = request.VenueId,
+            // UserId = request.UserId,
         };
     }
 }

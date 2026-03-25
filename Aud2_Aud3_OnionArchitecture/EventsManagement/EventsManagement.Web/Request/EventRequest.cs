@@ -8,9 +8,9 @@ public record EventRequest(
     [Required] DateTime StartDate,
     [Required] DateTime EndDate,
     [Required] string Status,
-    string? ImageUrl,
-    [Required] Guid VenueId,
-    [Required] string UserId
+    string? ImageUrl //,
+    // [Required] Guid VenueId,
+    // [Required] string UserId
     );
 
             
