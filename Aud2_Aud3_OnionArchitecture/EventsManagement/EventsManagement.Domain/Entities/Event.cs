@@ -10,15 +10,16 @@ public class Event : BaseEntity
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string? ImageUrl { get; set; }
-    public EventStatus EventStatus;
+    public EventStatus EventStatus { get; set; }
     
     //MANY-TO-ONE
-    public string? UserId { get; set; } //NOTE: NAMERNO e string UserId, bidejki nasleduva od IdentityUser EventsAppUser klasata
+    //NOTE: NAMERNO e string UserId, bidejki nasleduva od IdentityUser EventsAppUser klasata
+    public string UserId { get; set; } = null!;
     public virtual EventsAppUser User { get; set; } = null!;
     
     //MANY-TO-ONE
     public Guid VenueId { get; set; }
-    public virtual Venue Venue { get; set; }
+    public virtual Venue Venue { get; set; } = null!;
     
     //ONE-TO-MANY
     public virtual ICollection<EventSectionPricing> SectionPricings { get; set; } = new List<EventSectionPricing>();

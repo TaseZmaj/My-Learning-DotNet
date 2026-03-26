@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using EventsManagement.Domain.Common;
 using EventsManagement.Domain.Dto;
+using EventsManagement.Domain.Entities;
 using EventsManagement.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;

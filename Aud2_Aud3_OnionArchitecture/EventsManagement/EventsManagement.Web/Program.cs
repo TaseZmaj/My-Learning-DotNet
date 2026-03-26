@@ -1,12 +1,14 @@
 using System.Text;
-using EventsManagement.Domain.Entities;
-using EventsManagement.Repository;
 using EventsManagement.Repository.Implementations;
+using EvolveDb;
+using EventsManagement.Repository;
 using EventsManagement.Repository.Interfaces;
+using EventsManagement.Domain.Entities;
 using EventsManagement.Web.Interceptor;
 using EventsManagement.Web.Mapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Implementations;
@@ -20,7 +22,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
-    options.UseSqlite(connectionString);
+    options.UseSqlServer(connectionString);
     options.UseLazyLoadingProxies();
     sp.GetService<AuditInterceptor>();
 });
@@ -77,25 +79,25 @@ builder.Services.AddAuthentication(options =>
 
 
 //============================ KOD ZA evolve ======================================
-// try
-// {
-//     using var cnx = new SqlConnection(connectionString);
-//
-//     var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
-//     {
-//         Locations = new[] { "Database/Migrations" },
-//         IsEraseDisabled = true,
-//         OutOfOrder = true
-//     };
-//
-//     evolve.Migrate();
-// }
-// catch (Exception ex)
-// {
-//     Console.WriteLine("Migration failed");
-//     Console.WriteLine(ex);
-//     throw;
-// }
+try
+{
+    using var cnx = new SqlConnection(connectionString);
+
+    var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
+    {
+        Locations = new[] { "Database/Migrations" },
+        IsEraseDisabled = true,
+        OutOfOrder = true
+    };
+
+    evolve.Migrate();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Migration failed");
+    Console.WriteLine(ex);
+    throw;
+}
 //=================================================================================
 
 var app = builder.Build();
@@ -111,29 +113,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-//===================== Kreiranje na User ====================
-//Jas go dodadov kodov, ne e od auditoriskite
-// using (var scope = app.Services.CreateScope())
-// {
-//     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<EventsAppUser>>();
-//
-//     var email = "admin@test.com";
-//
-//     var existingUser = await userManager.FindByEmailAsync(email);
-//
-//     if (existingUser == null)
-//     {
-//         var user = new EventsAppUser
-//         {
-//             FirstName = "Stefan",
-//             LastName = "Tasevski"
-//         };
-//
-//         await userManager.CreateAsync(user, "Pass123");
-//     }
-// }
-//============================================================
 
 app.UseHttpsRedirection();
 app.UseRouting();

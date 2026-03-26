@@ -61,8 +61,8 @@ public class EventService : IEventService
             EndDate = eventDto.EndDate,
             EventStatus = eventDto.Status,
             ImageUrl = eventDto.ImageUrl,
-            // VenueId = eventDto.VenueId,
-            // UserId = eventDto.UserId
+            VenueId = eventDto.VenueId,
+            UserId = eventDto.UserId
         };
         return await _repository.InsertAsync(eventToAdd);
     }
@@ -102,6 +102,7 @@ public class EventService : IEventService
         );
     }
 
+    //Ovoj method ne se koristi, tuku samo saka da pokaze kolku e poslozen nasproti koristenje na .Include kako metodot pod nego
     public async Task<List<Event>> GetAllEventsAsyncWithEventPricingWithoutInclude()
     {
         var events = await GetAllAsync();
