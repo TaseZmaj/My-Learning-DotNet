@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 using Service.Implementations;
 using Service.Interfaces;
+using Service.jobs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddScoped<AuditInterceptor>();
+//MAIN DATABASE CONTEXT ===============================================
 builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
     options.UseSqlServer(connectionString);
@@ -32,6 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
     
     // sp.GetService<AuditInterceptor>();
 });
+// ====================================================================
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -50,16 +54,53 @@ builder.Services.AddIdentity<EventsAppUser, IdentityRole>(options =>
 
 builder.Services.AddRazorPages();
 
-
+//REPOSITORIES
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IVenueRepository, VenueRepository>();
+builder.Services.AddScoped<ILegacyVenueRepository, LegacyVenueRepository>();
+
+//SERVICES
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 // builder.Services.AddScoped<IVenueService, VenueService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<VenueETLService>();
 
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
+//MAPPERS
 builder.Services.AddScoped<EventMapper>();
+builder.Services.AddScoped<ReservationMapper>();
 
+//BACKGROUND SERVICES =========================================================================
+builder.Services.AddHostedService<ReservationCleanupBackgroundService>();
+
+builder.Services.AddHostedService<LegacyDBEtlBackgroundService>();
+
+builder.Services.AddQuartzHostedService();
+builder.Services.AddQuartz(options =>
+{
+    var jobKey = new JobKey("reservation-cleanup", "maintenance");
+    options.AddJob<QuartzReservationCleanupJob>(o => o.WithIdentity(jobKey));
+
+    options.AddTrigger(o =>
+    {
+        o.ForJob(jobKey).WithIdentity("reservation-cleanup-trigger")
+            .WithCronSchedule("0/30 * * * * ?")
+            .WithDescription("Expires unpaid reservations");
+    });
+});
+//===================================================================================
+
+//LEGACY DB CONNECTION ================================================
+builder.Services.AddDbContext<LegacyApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration
+            .GetConnectionString("LegacyVenueDb")));
+// ==================================================================================
+
+
+// JWT ==============================================================================
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]
                                  ?? throw new InvalidOperationException("Jwt:Key is missing from configuration."));
@@ -83,9 +124,9 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = TimeSpan.Zero
         };
     });
+//===================================================================================
 
-
-//============================ KOD ZA evolve ======================================
+//============================ KOD ZA evolve ========================================
 try
 {
     using var cnx = new SqlConnection(connectionString);

@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="EFCore.BulkExtensions.SqlServer" Version="10.0.1" />
         <PackageReference Include="Evolve" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.3" />
@@ -28,6 +29,9 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
+        <PackageReference Include="Quartz" Version="3.18.0" />
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.18.0" />
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.18.0" />
     </ItemGroup>
 
     <ItemGroup>

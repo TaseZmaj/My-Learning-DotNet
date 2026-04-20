@@ -3,7 +3,7 @@ using EventsManagement.Domain.Enums;
 
 namespace EventsManagement.Domain.Entities;
 
-public class Reservation : BaseEntity
+public class Reservation : BaseAuditableEntity<EventsAppUser>
 {
     public DateTime ReservedAt { get; set; }
     public DateTime ExpiresAt { get; set; }

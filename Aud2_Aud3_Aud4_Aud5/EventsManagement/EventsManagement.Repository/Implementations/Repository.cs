@@ -10,7 +10,7 @@ namespace EventsManagement.Repository.Implementations;
 
 public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext _context;
         private readonly DbSet<T> entites;
 
         public Repository(ApplicationDbContext context)
@@ -91,7 +91,8 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
 
             if (orderBy != null)
             {
-                orderBy(query);
+                // orderBy(query);
+                query = orderBy(query);
             }
 
             return await query.Select(selector).ToListAsync();
