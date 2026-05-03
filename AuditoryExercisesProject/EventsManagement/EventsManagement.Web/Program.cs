@@ -1,0 +1,181 @@
+using System.Text;
+using EventsManagement.Repository.Implementations;
+using EvolveDb;
+using EventsManagement.Repository;
+using EventsManagement.Repository.Interfaces;
+using EventsManagement.Domain.Entities;
+using EventsManagement.Web.Interceptor;
+using EventsManagement.Web.Mapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Quartz;
+using Service.Implementations;
+using Service.Interfaces;
+using Service.jobs;
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddScoped<AuditInterceptor>();
+//MAIN DATABASE CONTEXT ===============================================
+builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+{
+    options.UseSqlServer(connectionString);
+    options.UseLazyLoadingProxies();
+   
+    var interceptor = sp.GetRequiredService<AuditInterceptor>();
+    options.AddInterceptors(interceptor);
+    
+    // sp.GetService<AuditInterceptor>();
+});
+// ====================================================================
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddIdentity<EventsAppUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddRazorPages();
+
+//REPOSITORIES
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IVenueRepository, VenueRepository>();
+builder.Services.AddScoped<ILegacyVenueRepository, LegacyVenueRepository>();
+
+//SERVICES
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+// builder.Services.AddScoped<IVenueService, VenueService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<VenueETLService>();
+
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+//MAPPERS
+builder.Services.AddScoped<EventMapper>();
+builder.Services.AddScoped<ReservationMapper>();
+
+//BACKGROUND SERVICES =========================================================================
+builder.Services.AddHostedService<ReservationCleanupBackgroundService>();
+
+builder.Services.AddHostedService<LegacyDBEtlBackgroundService>();
+
+builder.Services.AddQuartzHostedService();
+builder.Services.AddQuartz(options =>
+{
+    var jobKey = new JobKey("reservation-cleanup", "maintenance");
+    options.AddJob<QuartzReservationCleanupJob>(o => o.WithIdentity(jobKey));
+
+    options.AddTrigger(o =>
+    {
+        o.ForJob(jobKey).WithIdentity("reservation-cleanup-trigger")
+            .WithCronSchedule("0/30 * * * * ?")
+            .WithDescription("Expires unpaid reservations");
+    });
+});
+//===================================================================================
+
+//LEGACY DB CONNECTION ================================================
+builder.Services.AddDbContext<LegacyApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration
+            .GetConnectionString("LegacyVenueDb")));
+// ==================================================================================
+
+
+// JWT ==============================================================================
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]
+                                 ?? throw new InvalidOperationException("Jwt:Key is missing from configuration."));
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+//===================================================================================
+
+//============================ KOD ZA evolve ========================================
+try
+{
+    using var cnx = new SqlConnection(connectionString);
+
+    var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
+    {
+        Locations = new[] { "Database/Migrations" },
+        IsEraseDisabled = true,
+        OutOfOrder = true
+    };
+
+    evolve.Migrate();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Migration failed");
+    Console.WriteLine(ex);
+    throw;
+}
+//=================================================================================
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseMigrationsEndPoint();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapStaticAssets();
+
+app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
+app.MapRazorPages()
+    .WithStaticAssets();
+
+app.Run();
