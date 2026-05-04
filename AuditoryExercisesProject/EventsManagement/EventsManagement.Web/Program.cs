@@ -1,4 +1,5 @@
 using System.Text;
+using EventsManagement.Domain.Configuration;
 using EventsManagement.Repository.Implementations;
 using EvolveDb;
 using EventsManagement.Repository;
@@ -10,8 +11,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
+using Service.Clients;
 using Service.Implementations;
 using Service.Interfaces;
 using Service.jobs;
@@ -66,6 +69,58 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<VenueETLService>();
 
+
+//WEATHER API TYPED CLIENT SERVICE
+//========================================================================================================
+    //Explanation: Linijava kod go gleda appsettings.json i vo nego go gleda "WeatherApi":{}
+    //od tuka, gi plugnuva-in vrednostite.  Gemini:Every time the Dependency Injection (DI)
+    //system creates an instance of a class that requests those settings, it will "inject"
+    //the values from your appsettings.json.
+    //Ova se narekuva CONFIGURATION BINDING.
+builder.Services.Configure<WeatherApiSettings>(
+    builder.Configuration.GetSection("WeatherApi"));
+
+    //REGISTRIRANJE NOV HTTPCLIENT (WeatherService klasata go koristi)
+builder.Services.AddHttpClient<WeatherApiClient>((sp, client) =>
+{
+    var settings = sp.GetRequiredService<IOptions<WeatherApiSettings>>().Value;
+
+    client.BaseAddress = new Uri(settings.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+    // client.DefaultRequestHeaders.Add("", settings.ApiKey); //Vaka ke go plugneshe-in API key-ot ako trebase
+    // da bide vo Headers, no moze da e i kako del od request-ot.  Zavisi od API-to
+     
+    // client.BaseAddress = new Uri("https://api.openweathermap.org/"); //NE e preporaclivo vaka da go pravish
+});
+// ===========================================================================================================
+
+//EXTERNAL EVENTS API TYPED CLIENT SETUP - with OAuth2 =======================================================
+//OAuth2 Token service
+builder.Services.AddHttpClient<TokenService>((sp, client) =>
+{
+    var settings = sp.GetRequiredService<IOptions<ExternalEventApiSettings>>().Value;
+
+    client.BaseAddress = new Uri(settings.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+    //Prilicno siguren sum deka nekako treba da gi plugnesh-in i ostanatite vrednosti
+    //od appsettings.json, samo nz kako
+}); 
+
+builder.Services.AddScoped<TokenService>();
+
+builder.Services.Configure<ExternalEventApiSettings>(
+    builder.Configuration.GetSection("ExternalEventApi"));
+
+builder.Services.AddHttpClient<ExternalEventApiClient>((sp, client) =>
+{
+    var settings = sp.GetRequiredService<IOptions<ExternalEventApiSettings>>().Value;
+
+    client.BaseAddress = new Uri(settings.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+    //Prilicno siguren sum deka nekako treba da gi plugnesh-in i ostanatite vrednosti
+    //od appsettings.json, samo nz kako
+});
+// ==========================================================================================================
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 //MAPPERS
@@ -74,7 +129,6 @@ builder.Services.AddScoped<ReservationMapper>();
 
 //BACKGROUND SERVICES =========================================================================
 builder.Services.AddHostedService<ReservationCleanupBackgroundService>();
-
 builder.Services.AddHostedService<LegacyDBEtlBackgroundService>();
 
 builder.Services.AddQuartzHostedService();
@@ -90,14 +144,14 @@ builder.Services.AddQuartz(options =>
             .WithDescription("Expires unpaid reservations");
     });
 });
-//===================================================================================
+//=============================================================================================
 
-//LEGACY DB CONNECTION ================================================
+//LEGACY DB CONNECTION ========================================================================
 builder.Services.AddDbContext<LegacyApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration
             .GetConnectionString("LegacyVenueDb")));
-// ==================================================================================
+// ============================================================================================
 
 
 // JWT ==============================================================================
