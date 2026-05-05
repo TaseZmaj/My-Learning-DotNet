@@ -38,7 +38,8 @@ public class EventService : IEventService
     {
         return await _repository.GetAsync(
             selector: x => x,
-            predicate: x => x.Id == id);
+            predicate: x => x.Id == id,
+            include: x => x.Include(y => y.Venue));
     }
     
     public async Task<Event> GetByIdNotNullAsync(Guid id)

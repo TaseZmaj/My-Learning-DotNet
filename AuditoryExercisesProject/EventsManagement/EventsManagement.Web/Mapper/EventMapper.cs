@@ -2,6 +2,7 @@
 using Service.Interfaces;
 using EventsManagement.Web.Extensions;
 using EventsManagement.Web.Request;
+using Service.Implementations;
 
 namespace EventsManagement.Web.Mapper;
 
@@ -9,17 +10,20 @@ public class EventMapper
 {
     private readonly IEventService _eventService;
     private readonly IFileUploadService _fileUploadService;
+    private readonly IWeatherService _weatherService;
     
-    public EventMapper(IEventService eventService, IFileUploadService fileUploadService)
+    public EventMapper(IEventService eventService, IFileUploadService fileUploadService, IWeatherService weatherService)
     {
         _eventService = eventService;
         _fileUploadService = fileUploadService;
+        _weatherService = weatherService;
     }
     
     public async Task<EventResponse?> GetById(Guid id)
     {
         var result = await _eventService.GetByIdAsync(id);
-        return result.ToResponse();
+        var weatherData = await _weatherService.GetWeatherDataForEventIdAsync(id); //BITNO E OVA RAZGLEDAJ
+        return result.ToResponse(weatherData); //BITNO E OVA RAZGLEDAJ
     }
 
     public async Task<List<EventResponse>> GetAll()

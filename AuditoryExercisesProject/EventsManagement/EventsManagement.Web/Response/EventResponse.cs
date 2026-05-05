@@ -1,4 +1,5 @@
-﻿using EventsManagement.Domain.Enums;
+﻿using EventsManagement.Domain.Dto;
+using EventsManagement.Domain.Enums;
 
 namespace EventsManagement.Web.Response;
 
@@ -18,5 +19,7 @@ public record EventResponse(
     string CreatedById,
     DateTime DateCreated,
     string? LastModifiedById,
-    DateTime? DateLastModified
+    DateTime? DateLastModified,
+    
+    EventWeatherDto? WeatherData
 );

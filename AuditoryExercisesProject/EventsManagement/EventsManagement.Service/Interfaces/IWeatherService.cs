@@ -1,6 +1,8 @@
-﻿namespace Service.Interfaces;
+﻿using EventsManagement.Domain.Dto;
 
-public class IWeatherService
+namespace Service.Interfaces;
+
+public interface IWeatherService
 {
-    
+    Task<EventWeatherDto> GetWeatherDataForEventIdAsync(Guid eventId);
 }

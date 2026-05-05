@@ -17,13 +17,7 @@ public class WeatherService : IWeatherService
     private readonly IMemoryCache _memoryCache;
     private readonly WeatherApiSettings _weatherApiSettings;
 
-    public WeatherService(
-        IEventService eventService,
-        IWeatherApiClient weatherApiClient,
-        ILogger<WeatherService> logger,
-        IMemoryCache memoryCache,
-        IOptions<WeatherApiSettings> weatherApiSettings
-    )
+    public WeatherService(IEventService eventService, IWeatherApiClient weatherApiClient, ILogger<WeatherService> logger, IMemoryCache memoryCache, IOptions<WeatherApiSettings> weatherApiSettings)
     {
         _eventService = eventService;
         _weatherApiClient = weatherApiClient;
@@ -32,36 +26,44 @@ public class WeatherService : IWeatherService
         _weatherApiSettings = weatherApiSettings.Value;
     }
 
-    public async Task<EventWeatherDto?> GetWeatherDataForEventIdAsync(Guid eventId)
+    public async Task<EventWeatherDto> GetWeatherDataForEventIdAsync(Guid eventId)
     {
-        // Find city and country from the existing event data
+        // Find city and country
         var eventData = await _eventService.GetByIdAsync(eventId);
-        
+
         var city = eventData.Venue.City;
         var country = eventData.Venue.Country;
-
-        // Construct a unique cache key based on the location
+        
+        // Construct cache key
         var cacheKey = $"weather-api:{city}:{country}";
 
-        // Check if the data is already in the cache
+        // Check cache
         if (_memoryCache.TryGetValue(cacheKey, out EventWeatherDto? cached))
         {
-            _logger.LogDebug("Cache hit for event {EventId}", eventId);
+            _logger.LogDebug(
+                "Cache hit for event {EventId}", eventId);
+            return cached;
+        }
+        
+        // If present, return
+        if (cached != null)
+        {
             return cached;
         }
 
-        // If not present, fetch from the external API
-        var apiData = await _weatherApiClient.GetWeatherForecastForCityAndCountry(city, country);
+        // If not present, fetch
+        var apiData = 
+            await _weatherApiClient.GetWeatherForecastForCityAndCountry(city, country);
 
-        if (apiData == null) return null;
-
-        // Put the result in the cache using the expiration time from settings
-        _memoryCache.Set(cacheKey, apiData, 
-            TimeSpan.FromMinutes(_weatherApiSettings.CacheDurationMinutes));
-
+        // Put in the cache
+        _memoryCache.Set(cacheKey, apiData, TimeSpan.FromMinutes(_weatherApiSettings.CacheDurationMinutes));
+        
         _logger.LogInformation(
-            $"Weather cached for event {EventId}: {Condition}, {Temp}°C", eventId);
+            "Weather cached for event {EventId}: " +
+            "{Condition}, {Temp}°C",
+            eventId, apiData.Condition, apiData.Temperature);
         
         return apiData;
+
     }
 }

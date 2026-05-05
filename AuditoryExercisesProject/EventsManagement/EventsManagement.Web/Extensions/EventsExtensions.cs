@@ -7,7 +7,7 @@ namespace EventsManagement.Web.Extensions;
 
 public static class EventsExtensions
 {
-    public static EventResponse? ToResponse(this Event e)
+    public static EventResponse? ToResponse(this Event e, EventWeatherDto? weatherDto = null)
     {
         return new EventResponse(
             e.Title,
@@ -23,7 +23,9 @@ public static class EventsExtensions
             e.CreatedById,
             e.DateCreated,
             e.LastModifiedById,
-            e.DateLastModified
+            e.DateLastModified,
+            
+            weatherDto
         );
     }
     public static List<EventResponse> ToResponse(this List<Event> events)

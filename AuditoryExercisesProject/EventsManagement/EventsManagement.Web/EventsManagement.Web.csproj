@@ -29,6 +29,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.5.0" />
         <PackageReference Include="Quartz" Version="3.18.0" />
         <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.18.0" />
         <PackageReference Include="Quartz.Extensions.Hosting" Version="3.18.0" />

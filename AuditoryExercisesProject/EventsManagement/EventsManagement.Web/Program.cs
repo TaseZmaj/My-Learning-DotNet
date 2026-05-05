@@ -13,6 +13,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Polly;
 using Quartz;
 using Service.Clients;
 using Service.Implementations;
@@ -68,7 +69,9 @@ builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 // builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<VenueETLService>();
+builder.Services.AddScoped<IWeatherService, WeatherService>();
 
+builder.Services.AddMemoryCache();
 
 //WEATHER API TYPED CLIENT SERVICE
 //========================================================================================================
@@ -81,7 +84,7 @@ builder.Services.Configure<WeatherApiSettings>(
     builder.Configuration.GetSection("WeatherApi"));
 
     //REGISTRIRANJE NOV HTTPCLIENT (WeatherService klasata go koristi)
-builder.Services.AddHttpClient<WeatherApiClient>((sp, client) =>
+builder.Services.AddHttpClient<IWeatherApiClient, WeatherApiClient>((sp, client) =>
 {
     var settings = sp.GetRequiredService<IOptions<WeatherApiSettings>>().Value;
 
@@ -91,19 +94,26 @@ builder.Services.AddHttpClient<WeatherApiClient>((sp, client) =>
     // da bide vo Headers, no moze da e i kako del od request-ot.  Zavisi od API-to
      
     // client.BaseAddress = new Uri("https://api.openweathermap.org/"); //NE e preporaclivo vaka da go pravish
+})
+.AddStandardResilienceHandler(options =>
+{
+    options.Retry.MaxRetryAttempts = 3;
+    options.Retry.Delay = TimeSpan.FromSeconds(2);
+    options.Retry.BackoffType =
+        DelayBackoffType.Exponential;
+    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
 });
 // ===========================================================================================================
 
 //EXTERNAL EVENTS API TYPED CLIENT SETUP - with OAuth2 =======================================================
 //OAuth2 Token service
+//go nemashe ova vo Auditoriski kod
 builder.Services.AddHttpClient<TokenService>((sp, client) =>
 {
     var settings = sp.GetRequiredService<IOptions<ExternalEventApiSettings>>().Value;
 
     client.BaseAddress = new Uri(settings.BaseUrl);
     client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
-    //Prilicno siguren sum deka nekako treba da gi plugnesh-in i ostanatite vrednosti
-    //od appsettings.json, samo nz kako
 }); 
 
 builder.Services.AddScoped<TokenService>();

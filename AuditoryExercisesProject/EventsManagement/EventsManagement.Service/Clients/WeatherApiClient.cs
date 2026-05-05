@@ -24,18 +24,30 @@ public class WeatherApiClient : IWeatherApiClient
         _logger = logger;
     }
     
-    public async Task<WeatherApiResponse?> GetWeatherForecastForCityAndCountry(
-        string city, string country, CancellationToken ct)
+    public async Task<EventWeatherDto> GetWeatherForecastForCityAndCountry(string city, string country)
     {
-        var url = $"forecast?q={city},country={country}" +
-                  $"&appid={_settings.ApiKey}&units=metric";
-        
-        _logger.LogInformation($"Fetching forecast for city:{city} and country: {country}");
+        //weather?q=Skopje,MK&appid={Api key}
+        var apiKey = _settings.ApiKey;
+        var url = $"weather?q={city},{country}&appid={apiKey}";
 
-        var response = await _http.GetAsync(url, ct);
+        var response = await _http.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<WeatherApiResponse>(ct);
+        var weatherData = await response.Content.ReadFromJsonAsync<WeatherApiResponse>();
+
+        return new EventWeatherDto()
+        {
+            Temperature = weatherData.MainWeatherData.Temperature,
+            FeelsLike = weatherData.MainWeatherData.FeelsLike,
+            TempMax = weatherData.MainWeatherData.TempMax,
+            TempMin = weatherData.MainWeatherData.TempMin,
+            Humidity = 1,
+            WindSpeed = weatherData.Wind.Speed,
+            Condition = "",
+            Description = "",
+            Icon = "",
+            RetrievedAt = DateTime.Now,
+        };
     }
 
     public async Task<EventWeatherDto?> GetCurrentWeatherAsync(double lat, double lon, CancellationToken ct)
@@ -65,11 +77,11 @@ public class WeatherApiClient : IWeatherApiClient
         // TRANSFORM - API response to our DTO
         return new EventWeatherDto
         {
-            Temperature = Math.Round(data.Main.Temperature, 1),
-            FeelsLike = Math.Round(data.Main.FeelsLike, 1),
-            TempMin = Math.Round(data.Main.TempMin, 1),
-            TempMax = Math.Round(data.Main.TempMax, 1),
-            Humidity = data.Main.Humidity,
+            Temperature = Math.Round(data.MainWeatherData.Temperature, 1),
+            FeelsLike = Math.Round(data.MainWeatherData.FeelsLike, 1),
+            TempMin = Math.Round(data.MainWeatherData.TempMin, 1),
+            TempMax = Math.Round(data.MainWeatherData.TempMax, 1),
+            Humidity = data.MainWeatherData.Humidity,
             WindSpeed = Math.Round(data.Wind.Speed, 1),
             Condition = data.Weather
                 .FirstOrDefault()?.Main ?? "Unknown",

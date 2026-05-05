@@ -7,7 +7,7 @@ public class WeatherApiResponse
     public List<WeatherCondition> Weather { get; set; } = [];
 
     [JsonPropertyName("main")]
-    public WeatherMain Main { get; set; } = null!;
+    public WeatherMain MainWeatherData { get; set; } = null!;
 
     [JsonPropertyName("wind")]
     public WeatherWind Wind { get; set; } = null!;
