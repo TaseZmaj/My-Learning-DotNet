@@ -5,6 +5,8 @@ namespace Service.Interfaces;
 public interface IVenueService
 {
     public Task<List<Venue>> GetAllAsync();
+
+    public Task<Venue?> GetByNameAndCityAsync(string venueName, string? cityName);
     public Task<Venue?> GetByIdAsync(Guid id);
     public Task<Venue> GetByIdNotNullAsync(Guid id);
 

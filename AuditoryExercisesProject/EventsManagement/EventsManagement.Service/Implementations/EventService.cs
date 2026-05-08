@@ -33,7 +33,18 @@ public class EventService : IEventService
             selector: x => x);
         return result.ToList();
     }
-    
+
+    public async Task<Event?> GetByTitleVenueIdAndStartDate(string title, Guid venueId, DateTime StartDate)
+    {
+        return await _repository.GetAsync(
+            selector: x => x,
+            predicate: e =>  
+                e.VenueId == venueId && 
+                e.Title == title && 
+                e.StartDate >= StartDate    
+            );
+    }
+
     public async Task<Event?> GetByIdAsync(Guid id)
     {
         return await _repository.GetAsync(

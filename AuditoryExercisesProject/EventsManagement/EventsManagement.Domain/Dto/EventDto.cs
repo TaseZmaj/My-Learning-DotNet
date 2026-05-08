@@ -12,5 +12,5 @@ public class EventDto
     public string? ImageUrl { get; set; }
     
     public Guid VenueId { get; set; }
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 }

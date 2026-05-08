@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventsManagement.Web.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Route("api/[controller]")]
 public class EventsController : ControllerBase
 {
     private readonly EventMapper _eventMapper;
@@ -36,6 +35,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Insert([FromBody] EventRequest eventRequest)
     {
         var result = await _eventMapper.InsertAsync(eventRequest);
@@ -43,6 +43,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EventRequest eventRequest)
     {
         var result = await _eventMapper.UpdateAsync(id, eventRequest);
@@ -50,6 +51,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var result = await _eventMapper.DeleteAsync(id);
@@ -63,6 +65,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost("upload-image/{eventId}")]
+    [Authorize]
     public async Task<IActionResult> UploadImageByIdAsync([FromRoute] Guid eventId, [FromForm] IFormFile file)
     {
         var result = await _eventMapper.UploadImageByIdAsync(eventId, file);
@@ -70,6 +73,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost("upload-image-fs/{eventId}")]
+    [Authorize]
     public async Task<IActionResult> UploadImageByIdInFileSystemAsync([FromRoute] Guid eventId,
         [FromForm] IFormFile file)
     {

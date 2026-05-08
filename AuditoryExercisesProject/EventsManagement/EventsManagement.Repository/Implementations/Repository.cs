@@ -68,14 +68,14 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             {
                 query = orderBy(query);
             }
-
             return await query.Select(selector).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<E>> GetAllAsync<E>(Expression<Func<T, E>> selector,
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null)
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            int? take = null)
         {
             IQueryable<T> query = entites;
 
@@ -94,7 +94,12 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
                 // orderBy(query);
                 query = orderBy(query);
             }
-
+            
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+            
             return await query.Select(selector).ToListAsync();
         }
         

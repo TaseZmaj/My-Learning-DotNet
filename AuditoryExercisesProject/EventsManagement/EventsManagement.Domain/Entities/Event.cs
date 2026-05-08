@@ -19,7 +19,7 @@ public class Event : BaseAuditableEntity<EventsAppUser>
     
     //MANY-TO-ONE
     //NOTE: NAMERNO e string UserId, bidejki nasleduva od IdentityUser EventsAppUser klasata
-    public string UserId { get; set; } = null!;
+    public string? UserId { get; set; } = null!;
     public virtual EventsAppUser User { get; set; } = null!;
     
     //MANY-TO-ONE

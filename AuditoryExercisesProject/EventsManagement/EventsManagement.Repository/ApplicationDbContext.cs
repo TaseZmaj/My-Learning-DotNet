@@ -15,6 +15,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Reservation> Reservations { get; set; }
     public DbSet<SeatReservation> SeatReservations { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
+    public DbSet<ApiClient> ApiClients { get; set; }
+    public DbSet<InboundEventEntry> InboundEventEntries { get; set; }
     
     public DbSet<EtlSyncLog> EtlSyncLogs { get; set; }
 }

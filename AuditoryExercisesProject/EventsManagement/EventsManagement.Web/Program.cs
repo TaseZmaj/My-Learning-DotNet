@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using EventsManagement.Domain.Configuration;
 using EventsManagement.Repository.Implementations;
 using EvolveDb;
@@ -7,6 +8,7 @@ using EventsManagement.Repository.Interfaces;
 using EventsManagement.Domain.Entities;
 using EventsManagement.Web.Interceptor;
 using EventsManagement.Web.Mapper;
+using EventsManagement.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -26,6 +28,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Logging.AddConsole(); //for debugging
 
 builder.Services.AddScoped<AuditInterceptor>();
 //MAIN DATABASE CONTEXT ===============================================
@@ -66,12 +70,37 @@ builder.Services.AddScoped<ILegacyVenueRepository, LegacyVenueRepository>();
 //SERVICES
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IFileUploadService, FileUploadService>();
-// builder.Services.AddScoped<IVenueService, VenueService>();
+builder.Services.AddScoped<IVenueService, VenueService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<VenueETLService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 
+//Inbound Service - Aud 8 =============================================================
+builder.Services.AddScoped<IInboundEventService, InboundEventService>();
+builder.Services.AddScoped<IInboundEventEntryProcessor, InboundEventEntryProcessor>();
+// =====================================================================================
+
 builder.Services.AddMemoryCache();
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429; //429 - Too many requests
+
+    options.AddPolicy("external-api", context =>
+    {
+        var apiKey = context.Request.Headers["X-API-key"];
+
+        var apiClient = context.Items["ApiClient"] as ApiClient;
+
+        return RateLimitPartition.GetFixedWindowLimiter(apiKey.ToString(), _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 60,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+        });
+    });
+});
 
 //WEATHER API TYPED CLIENT SERVICE
 //========================================================================================================
@@ -141,18 +170,33 @@ builder.Services.AddScoped<ReservationMapper>();
 builder.Services.AddHostedService<ReservationCleanupBackgroundService>();
 builder.Services.AddHostedService<LegacyDBEtlBackgroundService>();
 
-builder.Services.AddQuartzHostedService();
 builder.Services.AddQuartz(options =>
 {
-    var jobKey = new JobKey("reservation-cleanup", "maintenance");
-    options.AddJob<QuartzReservationCleanupJob>(o => o.WithIdentity(jobKey));
+    options.UseMicrosoftDependencyInjectionJobFactory();
+    
+    // AUD 6 -> Job 1: Reservation Cleanup
+    var cleanupKey = new JobKey("reservation-cleanup", "maintenance");
+    options.AddJob<QuartzReservationCleanupJob>(o => o.WithIdentity(cleanupKey));
+    options.AddTrigger(o => o
+        .ForJob(cleanupKey)
+        .WithIdentity("reservation-cleanup-trigger")
+        .WithCronSchedule("0/30 * * * * ?"));
 
-    options.AddTrigger(o =>
-    {
-        o.ForJob(jobKey).WithIdentity("reservation-cleanup-trigger")
-            .WithCronSchedule("0/30 * * * * ?")
-            .WithDescription("Expires unpaid reservations");
-    });
+    // AUD 8 -> Job 2: Inbound Event Processing
+    var inboundKey = new JobKey("inbound-event-entry-batch-save", "maintenance");
+    options.AddJob<InboundEventProcessingJob>(o => o.WithIdentity(inboundKey));
+    options.AddTrigger(o => o
+        .ForJob(inboundKey)
+        .WithIdentity("inbound-event-entry-batch-save-trigger")
+        .StartNow()
+        .WithSimpleSchedule(x => x.WithIntervalInSeconds(20).RepeatForever()));
+        // .WithCronSchedule("0/20 * * * * ?") // Every 20 seconds for testing
+        // .WithDescription("Enters Pending inbound events into the database in batches of 10"));
+});
+
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
 });
 //=============================================================================================
 
@@ -190,26 +234,27 @@ builder.Services.AddAuthentication(options =>
     });
 //===================================================================================
 
+
 //============================ KOD ZA evolve ========================================
-try
-{
-    using var cnx = new SqlConnection(connectionString);
-
-    var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
-    {
-        Locations = new[] { "Database/Migrations" },
-        IsEraseDisabled = true,
-        OutOfOrder = true
-    };
-
-    evolve.Migrate();
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Migration failed");
-    Console.WriteLine(ex);
-    throw;
-}
+// try
+// {
+//     using var cnx = new SqlConnection(connectionString);
+//
+//     var evolve = new Evolve(cnx, msg => Console.WriteLine(msg))
+//     {
+//         Locations = new[] { "Database/Migrations" },
+//         IsEraseDisabled = true,
+//         OutOfOrder = true
+//     };
+//
+//     evolve.Migrate();
+// }
+// catch (Exception ex)
+// {
+//     Console.WriteLine("Migration failed");
+//     Console.WriteLine(ex);
+//     throw;
+// }
 //=================================================================================
 
 var app = builder.Build();
@@ -226,11 +271,16 @@ else
     app.UseHsts();
 }
 
+// MIDDLEWARE =======================================================================
+app.UseMiddleware<ApiKeyMiddleware>();
+// ==================================================================================
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 app.MapStaticAssets();
 

@@ -7,6 +7,8 @@ public interface IEventService
 {
     public Task<List<Event>> GetAllAsync();
     public Task<Event?> GetByIdAsync(Guid id);
+
+    public Task<Event?> GetByTitleVenueIdAndStartDate(string title, Guid venueId, DateTime StartDate);
     public Task<Event> GetByIdNotNullAsync(Guid id);
     public Task<Event> InsertAsync(EventDto dto);
     public Task<Event> UpdateAsync(Guid id, EventDto dto);

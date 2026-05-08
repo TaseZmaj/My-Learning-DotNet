@@ -22,6 +22,34 @@ namespace EventsManagement.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("EventsManagement.Domain.Entities.ApiClient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RateLimitPerMinute")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApiClients");
+                });
+
             modelBuilder.Entity("EventsManagement.Domain.Entities.EtlSyncLog", b =>
                 {
                     b.Property<Guid>("Id")
@@ -92,7 +120,6 @@ namespace EventsManagement.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("VenueId")
@@ -250,6 +277,41 @@ namespace EventsManagement.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EventsImages");
+                });
+
+            modelBuilder.Entity("EventsManagement.Domain.Entities.InboundEventEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ApiClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedEventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RawPayload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiClientId");
+
+                    b.ToTable("InboundEventEntries");
                 });
 
             modelBuilder.Entity("EventsManagement.Domain.Entities.Reservation", b =>
@@ -586,9 +648,7 @@ namespace EventsManagement.Repository.Migrations
 
                     b.HasOne("EventsManagement.Domain.Entities.EventsAppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.HasOne("EventsManagement.Domain.Entities.Venue", "Venue")
                         .WithMany("Events")
@@ -620,6 +680,17 @@ namespace EventsManagement.Repository.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("Section");
+                });
+
+            modelBuilder.Entity("EventsManagement.Domain.Entities.InboundEventEntry", b =>
+                {
+                    b.HasOne("EventsManagement.Domain.Entities.ApiClient", "ApiClient")
+                        .WithMany()
+                        .HasForeignKey("ApiClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApiClient");
                 });
 
             modelBuilder.Entity("EventsManagement.Domain.Entities.Reservation", b =>
