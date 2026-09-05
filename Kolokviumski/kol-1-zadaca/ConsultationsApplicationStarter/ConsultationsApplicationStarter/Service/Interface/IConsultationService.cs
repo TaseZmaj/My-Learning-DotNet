@@ -11,5 +11,6 @@ public interface IConsultationService
     Task<Consultation> UpdateAsync(Guid id, DateTime startTime, DateTime endTime, Guid roomId);
     Task<Consultation> DeleteByIdAsync(Guid id);
     Task<PaginatedResult<Consultation>> GetPagedAsync(int pageNumber, int pageSize);
-
+    Task<Consultation> IncrementRegisteredStudents(Guid id);
+    Task<Consultation> DecrementRegisteredStudents(Guid id);
 }

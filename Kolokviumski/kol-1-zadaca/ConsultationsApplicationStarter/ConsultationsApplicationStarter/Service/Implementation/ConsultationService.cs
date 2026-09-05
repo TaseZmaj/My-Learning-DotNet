@@ -40,12 +40,26 @@ public class ConsultationService : IConsultationService
     public async Task<List<Consultation>> GetAllAsync(string? roomName, DateOnly? date)
     {
         var result = new List<Consultation>();
-        
-        if (roomName != null && date != null)
+
+        if (roomName != null && date == null)
+        {
+            result = await _repository.GetAllAsync(
+                selector: x => x,
+                predicate: x => x.Room.Name == roomName);
+        }
+        else if (date != null && roomName == null)
+        {
+            result = await _repository.GetAllAsync(
+                selector: x => x,
+                predicate: x => DateOnly.FromDateTime(x.StartTime) == date);
+
+        }
+        else if (date != null && roomName != null)
         {
             result = await _repository.GetAllAsync(
                 selector: x => x,
                 predicate: x => x.Room.Name == roomName && DateOnly.FromDateTime(x.StartTime) == date);
+
         }
         else
         {
@@ -73,11 +87,6 @@ public class ConsultationService : IConsultationService
     {
         var consultationToUpdate = await GetByIdNotNullAsync(id);
         
-        if (consultationToUpdate.RegisteredStudents > 0)
-        {
-            throw new InvalidOperationException($"Cannot delete consultation id={id} -> it has registered students");
-        }
-        
         consultationToUpdate.StartTime = startTime;
         consultationToUpdate.EndTime = endTime;
         consultationToUpdate.RoomId = roomId;
@@ -88,6 +97,12 @@ public class ConsultationService : IConsultationService
     public async Task<Consultation> DeleteByIdAsync(Guid id)
     {
         var consultationToDelete = await GetByIdNotNullAsync(id);
+        
+        if (consultationToDelete.RegisteredStudents > 0)
+        {
+            throw new InvalidOperationException($"Cannot delete consultation id={id} -> it has registered students");
+        }
+        
         return await _repository.DeleteAsync(consultationToDelete);
 
     }
@@ -105,5 +120,20 @@ public class ConsultationService : IConsultationService
             include: x => x.Include(y => y.Attendances),
             orderBy: x => x.OrderBy(e => e.StartTime),
             asNoTracking: true);
+    }
+
+    public async Task<Consultation> IncrementRegisteredStudents(Guid id)
+    {
+        var consultationToUpdate = await GetByIdNotNullAsync(id);
+        consultationToUpdate.RegisteredStudents++;
+        
+        return await _repository.UpdateAsync(consultationToUpdate);
+    }
+
+    public async Task<Consultation> DecrementRegisteredStudents(Guid id)
+    {
+        var consultationToUpdate = await GetByIdNotNullAsync(id);
+        consultationToUpdate.RegisteredStudents--;
+        return await _repository.UpdateAsync(consultationToUpdate);
     }
 }

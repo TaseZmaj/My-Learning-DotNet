@@ -4,8 +4,20 @@ namespace Service.Implementation;
 
 public class FileUploadService : IFileUploadService
 {
-    public Task<string> UploadFileAsync(byte[] fileBytes, string originalFileName, string folder = "cancellations")
+    public async Task<string> UploadFileAsync(
+        byte[] fileBytes, 
+        string originalFileName, 
+        string folder = "cancellations")
     {
-        throw new NotImplementedException();
+        var uploadsFolder = Path.Combine("wwwroot", "uploads", folder);
+        Directory.CreateDirectory(uploadsFolder);
+
+        var extension = Path.GetExtension(originalFileName);
+        var fileName = $"{Guid.NewGuid()}{extension}";
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        await File.WriteAllBytesAsync(filePath, fileBytes);
+
+        return $"/uploads/{folder}/{fileName}";
     }
 }

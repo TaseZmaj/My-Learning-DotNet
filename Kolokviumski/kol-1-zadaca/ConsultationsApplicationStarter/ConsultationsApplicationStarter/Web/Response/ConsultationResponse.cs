@@ -6,7 +6,7 @@ public record ConsultationResponse(
     Guid Id,
     DateOnly Date,
     Guid RoomId,
-    string RoomName,
+    // string RoomName,
     int RegisteredStudents,
     List<BasicAttendanceResponse> Attendances
 );

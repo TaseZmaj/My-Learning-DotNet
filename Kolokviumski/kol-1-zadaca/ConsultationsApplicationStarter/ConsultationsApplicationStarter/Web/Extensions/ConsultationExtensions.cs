@@ -22,7 +22,7 @@ public static class ConsultationExtensions
             c.Id,
             DateOnly.FromDateTime(c.StartTime),
             c.RoomId,
-            c.Room.Name,
+            // c.Room.Name,
             c.RegisteredStudents,
             c.Attendances.Select(x => x.ToBasicResponse()).ToList()
         );

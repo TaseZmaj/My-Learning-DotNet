@@ -1,48 +1,150 @@
 using Domain.Dto;
+using Domain.Enums;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Repository.Interface;
 using Service.Interface;
 
 namespace Service.Implementation;
 
 public class AttendanceService : IAttendanceService
 {
-    public Task<Attendance> GetByIdNotNullAsync(Guid id)
+    private readonly IRepository<Attendance> _attendanceRepository;
+    private readonly IRepository<Consultation> _consultationRepository;
+    private readonly IConsultationService _consultationService;
+    
+    public AttendanceService(
+        IRepository<Attendance> attendanceRepository,
+        IConsultationService consultationService,
+        IRepository<Consultation> consultationRepository
+        )
     {
-        throw new NotImplementedException();
+        _attendanceRepository = attendanceRepository;
+        _consultationService = consultationService;
+        _consultationRepository = consultationRepository;
+    }
+    
+    public async Task<Attendance> GetByIdNotNullAsync(Guid id)
+    {
+        var result = await _attendanceRepository.GetAsync(
+            selector: x => x,
+            predicate: x => x.Id == id,
+            include: x => x.Include(a => a.User));
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Consultation with id {id}");
+        }
+        
+        return result;
     }
 
-    public Task<Attendance?> GetByIdAsync(Guid id)
+    public async Task<Attendance?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _attendanceRepository.GetAsync(
+            selector: x => x,
+            predicate: x => x.Id == id
+        );
     }
 
-    public Task<List<Attendance>> GetAllAsync(string? dateAfter)
+    public async Task<List<Attendance>> GetAllAsync(string? dateAfter)
     {
-        throw new NotImplementedException();
+        var result = new List<Attendance>();
+        
+        if (dateAfter != null)
+        {
+            result = await _attendanceRepository.GetAllAsync(
+                selector: x => x,
+                predicate: x => x.Consultation.StartTime <= DateTime.Parse(dateAfter));
+        }
+        else
+        {
+            result = await _attendanceRepository.GetAllAsync(x => x);
+        }
+         
+        return result.ToList();
     }
 
-    public Task<Attendance> CreateAsync(AttendanceDto dto)
+    public async Task<List<Attendance>> GetAllByConsultationIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var result = await _attendanceRepository.GetAllAsync(
+                selector: x => x,
+                predicate: x => x.ConsultationId == id);
+        
+        return result.ToList();
+    }
+    
+    public async Task<Attendance> CreateAsync(AttendanceDto dto)
+    {
+        var attendanceToAdd = new Attendance
+        {
+            Comment = dto.Comment,
+            UserId = dto.UserId,
+            RoomId = dto.RoomId,
+            ConsultationId = dto.ConsultationId,
+            Status = Status.Registered
+        };
+        
+        var result = await _attendanceRepository.InsertAsync(attendanceToAdd);
+        
+        await _consultationService.IncrementRegisteredStudents(dto.ConsultationId);
+        
+        return await GetByIdNotNullAsync(result.Id);
     }
 
-    public Task<Attendance> UpdateAsync(Guid id, AttendanceDto dto)
+    public async Task<Attendance> UpdateAsync(Guid id, AttendanceDto dto)
     {
-        throw new NotImplementedException();
+        var attendanceToUpdate = await GetByIdNotNullAsync(id);
+        
+        attendanceToUpdate.Comment = dto.Comment;
+        attendanceToUpdate.RoomId = dto.RoomId;
+        attendanceToUpdate.ConsultationId = dto.ConsultationId;
+        attendanceToUpdate.UserId = dto.UserId;
+        
+        return await _attendanceRepository.UpdateAsync(attendanceToUpdate);
     }
 
-    public Task<Attendance> DeleteByIdAsync(Guid id)
+    public async Task<Attendance> DeleteByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var attendanceToDelete = await GetByIdNotNullAsync(id);
+        var consultation = await _consultationService.GetByIdNotNullAsync(attendanceToDelete.ConsultationId);
+        
+        if (consultation.StartTime <= DateTime.Now.AddHours(1))
+        {
+            throw new InvalidOperationException($"Attendance with id {id} is in 1 hour or less, can't delete.");
+        }
+
+        await _consultationService.DecrementRegisteredStudents(attendanceToDelete.ConsultationId);
+        
+        await _attendanceRepository.DeleteAsync(attendanceToDelete);
+
+        return attendanceToDelete;
     }
 
-    public Task<PaginatedResult<Attendance>> GetPagedAsync(int pageNumber, int pageSize)
+    public async Task<PaginatedResult<Attendance>> GetPagedAsync(int pageNumber, int pageSize)
     {
-        throw new NotImplementedException();
+        return await _attendanceRepository.GetAllPagedAsync(
+            selector: x => x,
+            pageNumber: pageNumber,
+            pageSize: pageSize,
+            orderBy: x => x.OrderBy(e => e.Id),
+            asNoTracking: true);
     }
 
-    public Task<Attendance> UpdateReasonPathByIdAsync(Guid id, string path)
+    public async Task<Attendance> UpdateReasonPathByIdAsync(Guid id, string path)
     {
-        throw new NotImplementedException();
+        var attendanceToUpdate = await GetByIdNotNullAsync(id);
+        
+        attendanceToUpdate.CancellationReasonDocumentPath = path;
+        return await _attendanceRepository.UpdateAsync(attendanceToUpdate);
+    }
+
+    public async Task<Attendance> MarkAsAbsent(Guid id)
+    {
+        var attendanceToUpdate = await GetByIdNotNullAsync(id);
+        
+        attendanceToUpdate.Status = Status.Absent;
+        
+        return await _attendanceRepository.UpdateAsync(attendanceToUpdate);
     }
 }
