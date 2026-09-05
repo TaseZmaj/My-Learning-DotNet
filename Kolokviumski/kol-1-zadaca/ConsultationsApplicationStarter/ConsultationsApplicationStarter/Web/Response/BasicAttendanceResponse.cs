@@ -1,6 +1,7 @@
 ﻿namespace Web.Response;
 
-public class BasicAttendanceResponse
-{
-    
-}
+public record BasicAttendanceResponse(
+    Guid Id,
+    string FirstName,
+    string LastName
+);

@@ -1,3 +1,12 @@
-﻿namespace Web.Response;
+﻿using Domain.Models;
 
-public record ConsultationResponse();
+namespace Web.Response;
+
+public record ConsultationResponse(
+    Guid Id,
+    DateOnly Date,
+    Guid RoomId,
+    string RoomName,
+    int RegisteredStudents,
+    List<BasicAttendanceResponse> Attendances
+);

@@ -1,3 +1,7 @@
 ﻿namespace Web.Request;
 
-public record ConsultationRequest();
+public record ConsultationRequest(
+    DateTime StartTime, 
+    DateTime EndTime,
+    Guid RoomId
+);

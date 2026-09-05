@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EventsManagement.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcb3d6cdd9cfe5dd9933ad7d42ab5702dccce32e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab3b71394c396de0d1c2385b0840af65d0879c4e")]
 [assembly: System.Reflection.AssemblyProductAttribute("EventsManagement.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EventsManagement.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

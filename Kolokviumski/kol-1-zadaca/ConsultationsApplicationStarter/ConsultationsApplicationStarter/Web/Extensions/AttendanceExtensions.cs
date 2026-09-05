@@ -1,6 +1,16 @@
-﻿namespace Web.Extensions;
+﻿using Domain.Models;
+using Web.Response;
 
-public class AttendanceExtensions
+namespace Web.Extensions;
+
+public static class AttendanceExtensions
 {
-    
+    public static BasicAttendanceResponse ToBasicResponse(this Attendance attendance)
+    {
+        return new BasicAttendanceResponse(
+            attendance.Id,
+            attendance.User.FirstName,
+            attendance.User.LastName
+        );
+    }
 }

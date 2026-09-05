@@ -1,0 +1,92 @@
+[
+  {
+    "TestName": "ConsultationServiceIntegrationTests.Service_Should_ReturnAllConsultations",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationService",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:28.0750182+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationControllerTests.GetAll_ShouldReturnJsonArrayWithExpectedFields",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:29.7582463+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "ConsultationControllerTests.Register_ShouldIncrementCount",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:31.6703911+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationControllerTests.Delete_InvalidId_ShouldReturnError",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:33.4517861+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationControllerTests.Delete_ValidId_ShouldDeleteAndReturn",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:35.1825841+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "ConsultationControllerTests.Update_InvalidId_ShouldReturnError",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:36.8623356+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationControllerTests.Update_ValidRequest_ShouldUpdateAndReturnFields",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:38.4905156+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "ConsultationControllerTests.Register_ValidRequest_ShouldCreateAndReturnFields",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:40.107163+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "ConsultationControllerTests.GetPaged_ShouldReturnPaginatedResponse",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:41.7643529+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "ConsultationControllerTests.GetAll_WithRoomFilter_ShouldFilterResults",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ConsultationController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T01:54:43.3460296+02:00",
+    "ErrorMessage": null,
+    "Points": 7
+  }
+]

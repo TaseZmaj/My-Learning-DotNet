@@ -1,6 +1,10 @@
-﻿namespace Web.Response;
+﻿using System.Text.Json.Serialization;
 
-public class BasicConsultationResponse
-{
-    
-}
+namespace Web.Response;
+
+public record BasicConsultationResponse(
+    Guid Id,
+    Guid RoomId,
+    DateTime Start,
+    DateTime End
+    );
