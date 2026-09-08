@@ -1,0 +1,11 @@
+[
+  {
+    "TestName": "AttendanceControllerTests.Delete_ValidId_ShouldReturn200",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "AttendanceController",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-05T17:40:02.7789997+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  }
+]
