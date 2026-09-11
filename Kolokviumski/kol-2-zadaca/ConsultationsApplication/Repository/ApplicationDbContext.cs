@@ -10,4 +10,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Attendance> Attendances { get; set; }
     public DbSet<Holds> Holds { get; set; }
     public DbSet<Room> Rooms { get; set; }
+    
+    public DbSet<InboundEventEntry> InboundEventEntries { get; set; }
+    public DbSet<ApiClient> ApiClients { get; set; }
+    public DbSet<EtlSyncLog> EtlSyncLogs { get; set; }
 }

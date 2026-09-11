@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Domain.Config;
+using Domain.Configuration;
 using Domain.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;

@@ -1,3 +1,5 @@
+using Domain.Models;
+
 namespace Service.Interface;
 
 public interface IInboundEventEntryService

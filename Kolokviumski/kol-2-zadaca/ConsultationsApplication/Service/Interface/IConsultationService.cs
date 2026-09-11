@@ -14,4 +14,8 @@ public interface IConsultationService
     
     Task IncrementNumberOfStudentsAsync(Guid id);
     Task DecrementNumberOfStudentsAsync(Guid id);
+
+    // Task GetIdByNameAsync(string roomName);
+
+    // Task<Consultation?> GetAllConsultationsModifiedSinceAsync(DateTime dateTime);
 }

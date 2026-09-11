@@ -1,6 +1,9 @@
+using Domain.Configuration;
 using Domain.Dto;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Repository.Interface;
 using Service.Interface;
 
@@ -9,10 +12,14 @@ namespace Service.Implementation;
 public class ConsultationService : IConsultationService
 {
     private readonly IRepository<Consultation> _consultationRepository;
+    private readonly IMemoryCache _memoryCache;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
-    public ConsultationService(IRepository<Consultation> consultationRepository)
+    public ConsultationService(IRepository<Consultation> consultationRepository, IMemoryCache memoryCache, IOptions<CacheSettings> cacheSettings)
     {
         _consultationRepository = consultationRepository;
+        _memoryCache = memoryCache;
+        _cacheSettings = cacheSettings;
     }
 
     public async Task<Consultation> GetByIdNotNullAsync(Guid id)
@@ -36,11 +43,27 @@ public class ConsultationService : IConsultationService
 
     public async Task<List<Consultation>> GetAllAsync(string? roomName, DateOnly? date)
     {
-        return await _consultationRepository.GetAllAsync(
+        var cacheKey = $"consultations:{roomName}:{date:yyyy-MM-dd}";
+        
+        if (_memoryCache.TryGetValue(cacheKey, out List<Consultation>? cachedConsultations))
+        {
+            return cachedConsultations;
+        }
+        
+        if (cachedConsultations != null)
+        {
+            return cachedConsultations;
+        }
+        
+        var result =  await _consultationRepository.GetAllAsync(
             selector: x => x,
             predicate: x => (roomName == null || x.Room.Name.Contains(roomName)) &&
                 (date == null || DateOnly.FromDateTime(x.StartTime) == date),
             include: x => x.Include(c => c.Attendances).ThenInclude(a => a.User));
+        
+        _memoryCache.Set(cacheKey, result, TimeSpan.FromMinutes(_cacheSettings.Value.ListCacheDurationMinutes));
+
+        return result;
     }
 
     public async Task<Consultation> CreateAsync(DateTime startTime, DateTime endTime, Guid roomId)

@@ -1,11 +1,335 @@
 [
   {
-    "TestName": "AttendanceControllerTests.Delete_ValidId_ShouldReturn200",
+    "TestName": "ExternalApiRateLimitTests.ExternalApi_ExceedingLimit_ShouldReturn429",
     "StudentId": "YOUR_INDEX_HERE",
-    "TestCategory": "AttendanceController",
+    "TestCategory": "RateLimit",
     "IsPassed": true,
-    "ExecutedAt": "2026-09-05T17:40:02.7789997+02:00",
+    "ExecutedAt": "2026-09-11T02:40:42.8039152+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "ExternalApiRateLimitTests.ExternalApi_WithinLimit_ShouldSucceed",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "RateLimit",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:44.0878919+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.Register_ValidApiKey_ShouldCreateInboundEventEntry",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:45.2781593+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.GetStatus_ValidId_ShouldReturnStatusObject",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:46.4393861+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.Register_ValidApiKey_ShouldReturn202Accepted",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:47.5301793+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.Register_InvalidApiKey_ShouldReturn401WithMessage",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:48.5862888+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.GetStatus_InvalidId_ShouldReturnError",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:49.6242093+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "ExternalAttendanceApiTests.Register_MissingApiKey_ShouldReturn401WithMessage",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ExternalApi",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:50.6552956+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "InboundEventProcessorTests.ProcessPendingEvents_ShouldIgnoreNonPendingEntries",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "InboundEvent",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:51.7000843+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "InboundEventProcessorTests.ProcessEventEntry_ValidPayload_ShouldSetEntryToCompleted",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "InboundEvent",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:52.718232+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "InboundEventProcessorTests.ProcessPendingEvents_ShouldProcessAllPendingEntries",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "InboundEvent",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:53.7581336+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "InboundEventProcessorTests.ProcessEventEntry_InvalidPayload_ShouldSetEntryToFailed",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "InboundEvent",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:54.7633413+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "InboundEventProcessorTests.ProcessEventEntry_ValidPayload_ShouldCreateAttendance",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "InboundEvent",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:55.7794264+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "ConsultationsApiClientTests.ApiClient_ShouldDeserializeResponse",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ApiClient",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:55.8134331+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationsApiClientTests.ApiClient_ShouldPassModifiedSinceDateAsQueryParam",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ApiClient",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:55.8151558+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationsApiClientTests.ApiClient_ShouldCallCorrectEndpoint",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ApiClient",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:55.816253+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationsApiClientTests.ApiClient_ShouldIncludeApiKeyHeader",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "ApiClient",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:55.8172014+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_EmptyLog_ShouldCallApiWithVeryOldDate",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:56.8446195+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_WithExistingLog_ShouldCallApiWithLastSyncDate",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:57.8945246+02:00",
     "ErrorMessage": null,
     "Points": 10
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_EmptyLog_ShouldImportAllConsultations",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:58.9533501+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_EmptyLog_ShouldCreateSuccessfulEtlSyncLogEntry",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:40:59.9714178+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_ShouldNotDuplicateExistingConsultations",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:01.0008021+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_WhenApiFails_ShouldCreateEtlSyncLogWithSuccessFalse",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:02.0277141+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_WhenApiFails_ShouldRecordErrorMessage",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:03.0611159+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlSyncServiceTests.SyncAll_WithExistingLog_ShouldImportNewConsultations",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "EtlSync",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2147069+02:00",
+    "ErrorMessage": null,
+    "Points": 10
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Staging_CacheSettings_ShouldHaveCorrectValues",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2165911+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.RateLimitSettings_ShouldHavePositiveValues_ForAllEnvironments",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2190234+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Production_ApiKeySettings_ShouldHaveCorrectKey",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2199504+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Development_CacheSettings_ShouldHaveCorrectValues",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2207968+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Production_CacheSettings_ShouldHaveCorrectValues",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2215955+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Staging_ApiKeySettings_ShouldHaveCorrectKey",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2223081+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "EnvironmentConfigurationTests.Development_ApiKeySettings_ShouldHaveCorrectKey",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Configuration",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:04.2230144+02:00",
+    "ErrorMessage": null,
+    "Points": 3
+  },
+  {
+    "TestName": "ConsultationCacheTests.GetAll_NoFilter_ShouldPopulateMemoryCacheWithEmptyKey",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Cache",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:05.3114197+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationCacheTests.GetAll_WithRoomAndDateFilter_ShouldPopulateMemoryCache",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Cache",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:06.3625045+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "ConsultationCacheTests.GetAll_CacheDuration_ShouldComeFromConfiguration",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "Cache",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:07.3815109+02:00",
+    "ErrorMessage": null,
+    "Points": 5
+  },
+  {
+    "TestName": "EtlBackgroundServiceTests.EtlSync_BackgroundService_ShouldCallSyncAllAsyncOnStartup",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "BackgroundService",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:08.9088574+02:00",
+    "ErrorMessage": null,
+    "Points": 8
+  },
+  {
+    "TestName": "EtlBackgroundServiceTests.EtlSync_BackgroundService_ShouldBeRegisteredAsHostedService",
+    "StudentId": "YOUR_INDEX_HERE",
+    "TestCategory": "BackgroundService",
+    "IsPassed": true,
+    "ExecutedAt": "2026-09-11T02:41:09.9167876+02:00",
+    "ErrorMessage": null,
+    "Points": 5
   }
 ]
